@@ -11,10 +11,13 @@
     <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          สวัสดีคุณ , {{ store.user }}
+          สวัสดีคุณ , {{ store.user?.name }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
-          <a href="#" class="dropdown-item" @click.prevent="logout">ออกจากระบบ</a>
+          <a href="#" class="dropdown-item" @click.prevent="logout">
+            <i class="fas fa-power-off"></i>
+            ออกจากระบบ
+          </a>
         </div>
       </li>
     </ul>

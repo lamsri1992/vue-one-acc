@@ -3,7 +3,7 @@
         <div class="login-box">
             <div class="card card-outline card-success">
                 <div class="card-header text-center">
-                    <img src="../../public/dist/img/logo_cmh.png" class="img img-fluid" width="50%">
+                    <img src="/dist/img/logo_cmh.png" class="img img-fluid" width="50%">
                     <p class="h5">One Accounting <br> ระบบริหารจัดการข้อมูลบัญชีหนี้</p>
                 </div>
                 <div class="card-body">
