@@ -113,7 +113,8 @@
                     { 'data': 'list_hash',
                     render: function (data) 
                     { 
-                        return '<a href="list/'+ data +'" class="btn btn-sm btn-default"><i class="fas fa-search"></i> รายละเอียด</a>' 
+                        return '<a href="list/'+ data +'" class="btn btn-sm btn-default"><i class="fas fa-search"></i> รายละเอียด</a>';
+
                     } 
                     },
                 ],

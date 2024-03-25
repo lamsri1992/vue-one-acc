@@ -162,6 +162,7 @@
                 subList: [],
                 creditorList: [],
                 view: {
+                    id: '',
                     year: '',
                     datein: '',
                     docno: '',
@@ -183,13 +184,14 @@
             axios.get(this.baseURL + 'list/' + this.$route.params.id)
                 .then(response => {
                 this.data = response.data;
+                this.view.id = response.data[0].list_id;
                 this.view.year = response.data[0].list_year;
-                this.view.datein = moment(response.data[0].list_date_in).format("DD/MM/YYYY");
+                this.view.datein = response.data[0].list_date_in;
                 this.view.docno = response.data[0].list_doc_no;
                 this.view.total = new Intl.NumberFormat().format(response.data[0].list_total);
-                this.view.creditor = response.data[0].creditor_name;
-                this.view.acctype = response.data[0].type_name;
-                this.view.subtype = response.data[0].sub_name;
+                this.view.creditor = response.data[0].creditor_id;
+                this.view.acctype = response.data[0].type_id;
+                this.view.subtype = response.data[0].sub_id;
                 this.view.note = response.data[0].list_note;
                 this.view.docitem = response.data[0].list_doc_item;
                 this.view.datedue = response.data[0].list_datedue;
@@ -226,53 +228,55 @@
                    text: JSON.stringify(data),
                    width: '50%'
                })
-                // if(this.view.year === '' || this.view.datein === '' || this.view.docno === '' || this.view.total === ''
-                // || this.view.acctype === '' || this.view.creditor === ''|| this.view.note === ''|| this.view.docitem === ''
-                // || this.view.datedue === '' || this.view.subtype === ''){
-                //     Swal.fire({
-                //         icon: 'error',
-                //         title: "Invalid Data",
-                //         text: "กรุณากรอกข้อมูลให้ครบถ้วน",
-                //         showCancelButton: false,
-                //         width: '50%'
-                //     })
-                // }else{
-                //     Swal.fire({
-                //         title: "ยืนยันบันทึกรายการใหม่ ?",
-                //         showDenyButton: true,
-                //         confirmButtonText: "บันทึกข้อมูล",
-                //         denyButtonText: "ยกเลิก"
-                //         }).then((result) => {
-                //         if (result.isConfirmed) {
-                //             const Toast = Swal.mixin({
-                //             toast: true,
-                //             position: "top-end",
-                //             showConfirmButton: false,
-                //             timer: 5000,
-                //             timerProgressBar: true,
-                //             didOpen: (toast) => {
-                //                 toast.onmouseenter = Swal.stopTimer;
-                //                 toast.onmouseleave = Swal.resumeTimer;
-                //             }
-                //             });
+                if(this.view.year === '' || this.view.datein === '' || this.view.docno === '' || this.view.total === ''
+                || this.view.acctype === '' || this.view.creditor === ''|| this.view.note === ''|| this.view.docitem === ''
+                || this.view.datedue === '' || this.view.subtype === ''){
+                    Swal.fire({
+                        icon: 'error',
+                        title: "Invalid Data",
+                        text: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                        showCancelButton: false,
+                        width: '50%'
+                    })
+                }else{
+                    Swal.fire({
+                        title: "ยืนยันแก้ไขรายการ ?",
+                        showDenyButton: true,
+                        confirmButtonText: "แก้ไขข้อมูล",
+                        denyButtonText: "ยกเลิก"
+                        }).then((result) => {
+                        if (result.isConfirmed) {
+                            const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                            });
                             
-                //             axios.post(this.baseURL + 'list', data)
-                //                 .then(response => {
-                //                 Toast.fire({
-                //                     icon: "success",
-                //                     title: "บันทึกรายการสำเร็จ",
-                //                 });
-                //                     this.$router.push('/list');
-                //                 })
-                //                 .catch(error => {
-                //                     Toast.fire({
-                //                         icon: "error",
-                //                         title: "พบข้อผิดพลาด" + error
-                //                 });
-                //             });     
-                //         }
-                //     });
-                // }
+                            axios.put(this.baseURL + 'list/' + this.view.id, data, {
+                                withCredentials: true
+                            })
+                            .then(response => {
+                                Toast.fire({
+                                    icon: "success",
+                                    title: "แก้ไขรายการสำเร็จ",
+                                });
+                                    this.$router.push('/list');
+                                })
+                                .catch(error => {
+                                    Toast.fire({
+                                        icon: "error",
+                                        title: "พบข้อผิดพลาด" + error
+                                });
+                            });     
+                        }
+                    });
+                }
             }
         }
     };
