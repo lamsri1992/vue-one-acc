@@ -1,5 +1,5 @@
 <template>
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-success elevation-4">
         <div class="text-center">
             <a href="#" class="brand-link">
                 <img src="../../dist/img/logo_cmh.png" alt="CMPHO Logo" class="brand-image img-circle elevation-3"
@@ -24,7 +24,7 @@
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{ name: 'list' }" class="nav-link">
+                        <router-link :to="{ name: 'report' }" class="nav-link">
                             <i class="nav-icon fas fa-print"></i>
                             ระบบรายงานข้อมูล
                         </router-link>

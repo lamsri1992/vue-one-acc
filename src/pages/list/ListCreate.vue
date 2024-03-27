@@ -123,6 +123,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-12" hidden>
+                                    <div class="form-group">
+                                        <label>Department ID</label>
+                                        <div class="input-group">
+                                            <input id="creator" type="text" class="form-control">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-pen"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group text-right">
                                         <button class="btn btn-success" 
@@ -144,7 +155,8 @@
 <script>
     import axios from 'axios'
     import Swal from 'sweetalert2'
-    
+    import { useAuthStore } from "@/stores/auth";
+
     export default {
         data() {
             return {
@@ -163,6 +175,8 @@
                     note: '',
                     docitem: '',
                     datedue: '',
+                    creator: '',
+                    department: '',
                 },
             };
         },
@@ -191,7 +205,13 @@
                 })
             },
             saveClick () {
+                const store = useAuthStore()
+                this.create.creator = store.user.id;
+                this.create.department = store.user.department;
                 var data = this.create
+
+                // console.log(JSON.stringify(data))
+
                 if(this.create.year === '' || this.create.datein === '' || this.create.docno === '' || this.create.total === ''
                 || this.create.acctype === '' || this.create.creditor === ''|| this.create.note === ''|| this.create.docitem === ''
                 || this.create.datedue === '' || this.create.subtype === ''){

@@ -9,7 +9,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item">ข้อมูลจัดซื้อ - จัดจ้าง</li>
-                            <li class="breadcrumb-item active">REF_ID : {{ view.docno }}</li>
+                            <li class="breadcrumb-item active">REF_ID : {{ this.view.docno }}</li>
                         </ol>
                     </div>
                 </div>
@@ -124,61 +124,45 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12 text-right">
-                                    <span class="badge badge-dark">
-                                        <i class="fas fa-user-edit"></i>
-                                        ผู้สร้างรายการ : {{ view.creator + " (" + view.department + ")" }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="row" v-if="view.statusID == 1">
-                                <div class="col-md-12 text-right">    
-                                    <div class="btn-group">
-                                        <router-link :to="{ name: 'list' }" class="btn btn-secondary">
-                                            <i class="fas fa-arrow-circle-left"></i>
-                                            กลับ
-                                        </router-link>
-                                        <button type="button" class="btn btn-danger">
-                                            <i class="fas fa-times-circle"></i>
-                                            ยกเลิกรายการ
-                                        </button>
-                                        <button type="button" class="btn btn-success" 
-                                        @click.prevent="saveClick">
-                                            <i class="fas fa-edit"></i>
-                                            แก้ไขข้อมูล
-                                        </button>
+                            <div class="text-right">
+                                <div class="row">
+                                    <div  class="col-md-12 text-right">
+                                        <span class="badge badge-dark">
+                                            <i class="fas fa-user-edit"></i>
+                                            ผู้สร้างรายการ : {{ view.creator + " (" + view.department + ")" }}
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 text-center" v-if="view.statusID == 2">
-                                    <div class="alert alert-danger" role="alert">
-                                        <i class="fas fa-calendar-check"></i>
-                                        รายการถูกเจ้าหน้าที่การเงินตอบรับแล้ว <br>
-                                        วันที่ : {{ view.finView }}
-                                    </div>
-                                    <router-link :to="{ name: 'list' }" class="btn btn-secondary">
+                                <div class="btn-group">
+                                    <router-link :to="{ name: 'listFinance' }" class="btn btn-secondary">
                                         <i class="fas fa-arrow-circle-left"></i>
                                         กลับ
                                     </router-link>
-                                </div>
-                                <div class="col-md-12 text-center" v-if="view.statusID == 3">
-                                    <div class="alert alert-success" role="alert">
-                                        <h4 class="alert-heading">
-                                            <i class="fas fa-check-circle"></i>
-                                            ชำระหนี้เสร็จสิ้น
-                                        </h4>
-                                        <hr>
-                                        <button class="btn btn-light btn-sm" type="button" data-toggle="collapse" 
-                                            data-target="#paidList" aria-expanded="false" aria-controls="paidList">
-                                            <i class="far fa-clipboard"></i>
-                                            รายละเอียดการชำระหนี้
-                                        </button>
-                                    </div>
+                                    <button type="button" class="btn btn-success" 
+                                    @click="createInvoice" v-if="view.statusID == 2">
+                                        <i class="fas fa-file-invoice-dollar"></i>
+                                        บันทึกจ่ายหนี้ : {{ view.docno }}
+                                    </button>
                                 </div>
                             </div>
                         </form>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12 text-center" v-if="view.statusID == 3">
+                                <div class="alert alert-success" role="alert">
+                                    <h4 class="alert-heading">
+                                        <i class="fas fa-check-circle"></i>
+                                        ชำระหนี้เสร็จสิ้น
+                                    </h4>
+                                    <hr>
+                                    <button class="btn btn-light btn-sm" type="button" data-toggle="collapse" 
+                                        data-target="#paidList" aria-expanded="false" aria-controls="paidList">
+                                        <i class="far fa-clipboard"></i>
+                                        รายละเอียดการชำระหนี้
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-12 collapse" id="paidList">
                                 <div class="card card-body">
@@ -226,6 +210,80 @@
                 </div>
             </div>
         </section>
+        <!-- Modal -->
+        <div class="modal fade" id="addInvoice" tabindex="-1" aria-labelledby="addInvoiceLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addInvoiceLabel">
+                            <i class="fas fa-plus-circle"></i>
+                            บันทึกจ่ายหนี้ : {{ this.view.docno }}
+                        </h5>
+                        <small class="text-muted text-right">
+                            <i class="far fa-folder-open"></i>
+                            วันที่เปิดเอกสาร {{ this.view.finView }} <br>
+                            <i class="far fa-calendar-check"></i>
+                            กำหนดชำระในวันที่ {{ view.dateLimit }}
+                        </small>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>
+                                วันที่ชำระเงิน
+                            </label>
+                            <div class="input-group">
+                                <VDatePicker locale="th" v-model="create.datePaid">
+                                    <template #default="{ inputValue, inputEvents }">
+                                        <input type="text" class="form-control" 
+                                        :value="inputValue" v-on="inputEvents" placeholder="กรุณาระบุวันที่">
+                                    </template>
+                                </VDatePicker>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                เลขที่ใบเสร็จ
+                            </label>
+                            <input type="text" class="form-control" placeholder="กรุณาระบุข้อมูล" v-model="create.billNo">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                จำนวนเงิน
+                            </label>
+                            <input type="text" class="form-control" :placeholder="'ยอดหนี้ ' + view.total" v-model="create.paidCash">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                เลขที่เช็ค
+                            </label>
+                            <input type="text" class="form-control" placeholder="กรุณาระบุข้อมูล" v-model="create.checkNo">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                ประเภทเงินจ่าย
+                            </label>
+                            <v-select :options="budgetList" v-model="create.typePaid" 
+                                :reduce="budgetList => budgetList.bud_id" label="bud_name" style="width: 100%;" placeholder="กรุณาระบุข้อมูล">
+                            </v-select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" v-model="create.listHash" hidden>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิดหน้าต่าง</button>
+                        <button type="button" class="btn btn-primary"
+                        @click.prevent="saveClick">
+                            <i class="fas fa-save"></i>
+                            บันทึกจ่ายหนี้
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -233,6 +291,7 @@
     import axios from 'axios'
     import moment from 'moment'
     import Swal from 'sweetalert2'
+    import { useAuthStore } from "@/stores/auth";
     
     export default {
         data() {
@@ -241,6 +300,7 @@
                 accList: [],
                 subList: [],
                 creditorList: [],
+                budgetList: [],
                 finance: null,
                 view: {
                     id: '',
@@ -255,20 +315,32 @@
                     docitem: '',
                     datedue: '',
                     finView: '',
+                    statusID: '',
                     creator: '',
                     department: '',
                 },
+                create:{
+                    listHash: '',
+                    datePaid: '',
+                    typePaid: '',
+                    billNo: '',
+                    paidCash: '',
+                    checkNo: '',
+                    creator: '',
+                }
             };
         },
         mounted() {
             this.getAccType()
             this.getSubType()
             this.getCompany()
+            this.getBudget()
             
             axios.get(this.baseURL + 'list/' + this.$route.params.id)
                 .then(response => {
                 this.data = response.data;
                 this.view.id = response.data[0].list_id;
+                this.create.listHash = response.data[0].list_hash;
                 this.view.year = response.data[0].list_year;
                 this.view.datein = response.data[0].list_date_in;
                 this.view.docno = response.data[0].list_doc_no;
@@ -279,14 +351,27 @@
                 this.view.note = response.data[0].list_note;
                 this.view.docitem = response.data[0].list_doc_item;
                 this.view.datedue = response.data[0].list_datedue;
-                this.view.status = response.data[0].status_name;
-                this.view.text = response.data[0].status_color;
-                this.view.statusID = response.data[0].status_id;
+                this.view.statusID = response.data[0].list_status;
                 this.view.dateCancel = moment(response.data[0].list_cancel_date).format("DD/MM/YYYY");
                 this.view.createDate = moment(response.data[0].list_create_date).format("DD/MM/YYYY");
                 this.view.finView = moment(response.data[0].list_finance_view).format("DD/MM/YYYY");
+                this.view.dateLimit = moment(response.data[0].limit_date).format("DD/MM/YYYY");
                 this.view.creator = response.data[0].name;
                 this.view.department = response.data[0].dept_name;
+
+                if(this.view.statusID == 1){
+                    Swal.fire({
+                        icon: "success",
+                        title: "ตอบรับข้อมูลแล้ว",
+                        text: "กรุณาดำเนินการภายในวันที่ " + this.view.dateLimit,
+                        showDenyButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                    })
+                    axios.put(this.baseURL + 'financeview/' + this.view.id,{
+                        withCredentials: true
+                    })
+                }
 
                 if(this.view.statusID == 3){
                     axios.get(this.baseURL + 'listFinance/' + this.$route.params.id)
@@ -315,11 +400,22 @@
                     this.creditorList = response.data;
                 })
             },
-            saveClick () {
-                var data = this.view
-                if(this.view.year === '' || this.view.datein === '' || this.view.docno === '' || this.view.total === ''
-                || this.view.acctype === '' || this.view.creditor === ''|| this.view.note === ''|| this.view.docitem === ''
-                || this.view.datedue === '' || this.view.subtype === ''){
+            getBudget(){
+                axios.get(this.baseURL + 'budget')
+                    .then(response => {
+                    this.budgetList = response.data;
+                })
+            },
+            createInvoice(){
+                var myModal = new bootstrap.Modal(document.getElementById('addInvoice'));
+                myModal.show();
+            },
+            saveClick(){
+                const store = useAuthStore()
+                this.create.creator = store.user.id;
+                var data = this.create
+                if(this.create.datePaid === '' || this.create.typePaid === '' || 
+                    this.create.billNo === '' || this.create.paidCash === ''|| this.create.checkNo === ''){
                     Swal.fire({
                         icon: 'error',
                         title: "Invalid Data",
@@ -329,9 +425,9 @@
                     })
                 }else{
                     Swal.fire({
-                        title: "ยืนยันแก้ไขรายการ ?",
+                        title: "ยืนยันบันทึกจ่ายหนี้ ?",
                         showDenyButton: true,
-                        confirmButtonText: "แก้ไขข้อมูล",
+                        confirmButtonText: "บันทึกข้อมูล",
                         denyButtonText: "ยกเลิก"
                         }).then((result) => {
                         if (result.isConfirmed) {
@@ -339,30 +435,30 @@
                             toast: true,
                             position: "top-end",
                             showConfirmButton: false,
-                            timer: 5000,
-                            timerProgressBar: true,
+                            timer: 3000,
+                            timerProgressBar: false,
                             didOpen: (toast) => {
                                 toast.onmouseenter = Swal.stopTimer;
                                 toast.onmouseleave = Swal.resumeTimer;
                             }
                             });
-                            
-                            axios.put(this.baseURL + 'list/' + this.view.id, data, {
-                                withCredentials: true
-                            })
-                            .then(response => {
+
+                            axios.post(this.baseURL + 'listFinance', data)
+                                .then(response => {
                                 Toast.fire({
                                     icon: "success",
-                                    title: "แก้ไขรายการสำเร็จ",
+                                    title: "บันทึกจ่ายหนี้สำเร็จ",
                                 });
-                                    this.$router.push('/list');
+                                    this.$router.push('/finance/list');
+                                    var myModal = new bootstrap.Modal(document.getElementById('addInvoice'));
+                                    myModal.hide();
                                 })
                                 .catch(error => {
                                     Toast.fire({
                                         icon: "error",
                                         title: "พบข้อผิดพลาด" + error
                                 });
-                            });     
+                            });
                         }
                     });
                 }

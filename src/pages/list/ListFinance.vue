@@ -134,7 +134,7 @@
             handleClick(event) {
                 const id = event.target.dataset.id;
                 // console.log(id)
-                this.$router.push('/list/' + id);
+                this.$router.push('/finance/list/' + id);
             }
         }
     };

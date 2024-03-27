@@ -14,18 +14,11 @@
   import Sidebar from '../Sidebar.vue';
   import SidebarUser from '../SidebarUser.vue';
   import SidebarFinance from '../SidebarFinance.vue';
-  
   import Footer from '../Footer.vue';
-  import { onMounted } from 'vue';
-  import { userStore } from '../../stores/user'
+  import { useAuthStore } from '../../stores/auth';
 
-  const store = userStore()
+  const store = useAuthStore()
 
-  onMounted(() => {
-    if (localStorage.getItem("user")) {
-      store.setUser()
-    }
-  })
 </script>
 
 <style scoped>
