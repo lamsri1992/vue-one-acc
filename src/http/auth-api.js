@@ -34,3 +34,4 @@ export const getUser = () => api.get("/api/user", {
         "X-XSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
     },
 });
+
