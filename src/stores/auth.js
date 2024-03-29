@@ -18,10 +18,17 @@ export const useAuthStore = defineStore("authStore", () => {
   };
 
   const handleLogin = async (credentials) => {
-    await csrfCookie();
+    // await csrfCookie();
     try {
-      await login(credentials);
-      await fetchUser();
+      const res = await login(credentials);
+
+      if (res.data.status == 'success') {
+        user.value = res.data.user
+        localStorage.setItem("token", res.data.authorisation.token)
+      }
+
+      console.log("user", user);
+      //   await fetchUser();
       errors.value = {};
     } catch (error) {
       if (error.response && error.response.status === 422) {
