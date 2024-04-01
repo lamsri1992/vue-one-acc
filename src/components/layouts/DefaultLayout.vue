@@ -16,8 +16,13 @@
   import SidebarFinance from '../SidebarFinance.vue';
   import Footer from '../Footer.vue';
   import { useAuthStore } from '../../stores/auth';
+import { onMounted } from 'vue';
 
   const store = useAuthStore()
+
+  onMounted(()=>{
+    console.log("defaultLayout");
+  })
 
 </script>
 

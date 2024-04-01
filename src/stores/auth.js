@@ -25,6 +25,8 @@ export const useAuthStore = defineStore("authStore", () => {
       if (res.data.status == 'success') {
         user.value = res.data.user
         localStorage.setItem("token", res.data.authorisation.token)
+        localStorage.setItem("user", JSON.stringify(res.data.user))
+        localStorage.setItem("isLoggedIn",true)
       }
 
       console.log("user", user);
@@ -52,7 +54,11 @@ export const useAuthStore = defineStore("authStore", () => {
   };
 
   const handleLogout = async () => {
+    console.log("logout");
     await logout();
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    localStorage.setItem("isLoggedIn",false)
     user.value = null;
   };
 
@@ -64,5 +70,6 @@ export const useAuthStore = defineStore("authStore", () => {
     handleLogin,
     handleRegister,
     handleLogout,
+
   };
 });

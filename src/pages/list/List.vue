@@ -126,7 +126,7 @@
         },
         methods:{
             getLists(){
-                axios.get(this.baseURL + '/list',{
+                axios.get(this.baseURL + 'list',{
                 headers:{
                     "Authorization":`Bearer ${localStorage.getItem("token")||null}`
                 }

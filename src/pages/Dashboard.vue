@@ -69,7 +69,7 @@
         };
         },
         mounted() {
-             axios.get(this.baseURL + '/data',{
+             axios.get(this.baseURL + 'data',{
                 headers:{
                     "Authorization":`Bearer ${localStorage.getItem("token")||null}`
                 }

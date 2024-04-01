@@ -37,7 +37,7 @@
   const logout = async () => {
       await store.handleLogout()
       isOpen.value = false
-      localStorage.removeItem("token")
+      
       router.push({ name: 'login' })
   }
 
