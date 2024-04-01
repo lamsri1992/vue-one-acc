@@ -69,8 +69,11 @@
         };
         },
         mounted() {
-            axios.get(this.baseURL + 'data')
-                .then(response => {
+             axios.get(this.baseURL + 'data',{
+                headers:{
+                    "Authorization":`Bearer ${localStorage.getItem("token")||null}`
+                }
+            }).then(response => {
                 this.data = response.data;
                 this.total = new Intl.NumberFormat().format(response.data[0].total);
                 this.wait = new Intl.NumberFormat().format(response.data[0].wait);

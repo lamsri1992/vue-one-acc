@@ -37,6 +37,7 @@
   const logout = async () => {
       await store.handleLogout()
       isOpen.value = false
+      
       router.push({ name: 'login' })
   }
 

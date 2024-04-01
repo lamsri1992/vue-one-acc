@@ -24,7 +24,11 @@ export const login = (credentials) => {
 }
 export const register = (user) => api.post("/auth/register", user);
 
-export const logout = () => api.post("/auth/logout");
+export const logout = () => api.post("/auth/logout",null, {
+    headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token") || null}`
+    }
+});
 
 export const getUser = () => api.get("/api/user", {
     headers: {

@@ -4,11 +4,11 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">ข้อมูลจัดซื้อ - จัดจ้าง</h1>
+                        <h1 class="m-0">รายการรอดำเนินการ</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item active">ข้อมูลจัดซื้อ - จัดจ้าง</li>
+                            <li class="breadcrumb-item active">รายการรอดำเนินการ</li>
                         </ol>
                     </div>
                 </div>
@@ -19,12 +19,12 @@
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-body">
-                        <div class="text-right">
+                        <!-- <div class="text-right">
                             <router-link class="btn btn-success" :to="{ name: 'listCreate' }">
                                 <i class="fas fa-plus-circle"></i>
                                 บันทึกข้อมูลจัดซื้อ - จัดจ้าง
                             </router-link>
-                        </div>
+                        </div> -->
                         <DataTable :data="lists" :columns="columns" 
                             class="table table-striped table-borderless display nowrap"
                             @click="handleClick"
